@@ -1,4 +1,11 @@
-# 🎁 英国优惠推荐码分享网站
+# [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://serenhiworld.github.io/awsome_reward)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+> 一个透明诚信的推荐码分享平台，专为在英国的华人朋友提供优质服务推荐码。使用我的推荐码，您享受优惠的同时，我也能获得推荐奖励，真正的互惠共赢！
+
+## 🌟 网站预览
+
+**在线访问**: [https://serenhiworld.github.io/awsome_reward](https://serenhiworld.github.io/awsome_reward)荐码分享网站
 
 [![GitHub Pages](https://img.shields.io/badge/GitHub%20Pages-Live-brightgreen)](https://your-username.github.io/uk-deals-referral)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
