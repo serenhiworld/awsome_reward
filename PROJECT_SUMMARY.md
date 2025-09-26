@@ -28,23 +28,26 @@
 
 ### 1. GitHub Pages部署（推荐）
 
-#### 一键部署到GitHub
+#### 🔐 Google账号登录用户（推荐）
+```bash
+./github_token_push.sh
+```
+专门为Google登录用户设计，使用Personal Access Token认证：
+- 自动配置Token认证
+- 推送代码到GitHub
+- 提供完整的GitHub Pages设置指南
+
+#### 📋 Google登录部署步骤
+1. **创建Personal Access Token**：访问 https://github.com/settings/tokens
+2. **创建GitHub仓库**：https://github.com/new
+3. **运行推送脚本**：`./github_token_push.sh`
+4. **配置GitHub Pages**：Settings → Pages → Deploy from branch → main
+
+#### 传统账号部署
 ```bash
 ./push_to_github.sh
 ```
-按提示输入GitHub用户名和仓库名，脚本会自动：
-- 更新配置文件
-- 推送代码到GitHub
-- 提供GitHub Pages设置指南
-
-#### 手动部署步骤
-1. 在GitHub创建新仓库
-2. 推送代码：
-```bash
-git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
-git push -u origin main
-```
-3. 在仓库Settings > Pages中启用GitHub Pages
+适用于传统用户名密码注册的GitHub账号
 
 ### 2. 本地开发服务器
 ```bash
