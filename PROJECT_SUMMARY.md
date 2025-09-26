@@ -26,14 +26,34 @@
 
 ## 🚀 快速使用指南
 
-### 1. 启动网站服务器
+### 1. GitHub Pages部署（推荐）
+
+#### 一键部署到GitHub
+```bash
+./push_to_github.sh
+```
+按提示输入GitHub用户名和仓库名，脚本会自动：
+- 更新配置文件
+- 推送代码到GitHub
+- 提供GitHub Pages设置指南
+
+#### 手动部署步骤
+1. 在GitHub创建新仓库
+2. 推送代码：
+```bash
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+```
+3. 在仓库Settings > Pages中启用GitHub Pages
+
+### 2. 本地开发服务器
 ```bash
 cd /home/ke/Documents/refer/awsome_reward
 python -m http.server 8000
 ```
 网站地址：http://localhost:8000
 
-### 2. 运行爬虫系统
+### 2. 运行爬虫系统（本地开发）
 
 #### 方式一：演示模式（推荐首次使用）
 ```bash
@@ -70,6 +90,13 @@ python3 manage_crawler.py
 - `index.html` - 主网站页面
 - `style.css` - 网站样式（含爬虫内容样式）
 - `script.js` - 网站交互功能
+
+### GitHub部署文件
+- `.github/workflows/deploy.yml` - GitHub Actions自动部署
+- `robots.txt` - SEO优化配置
+- `sitemap.xml` - 搜索引擎网站地图
+- `push_to_github.sh` - 一键推送脚本
+- `GITHUB_DEPLOYMENT.md` - GitHub部署指南
 
 ### 爬虫系统
 - `crawler/simple_crawler.py` - 简化版爬虫（推荐）
@@ -136,9 +163,28 @@ python3 manage_crawler.py
 通过这个系统，您现在拥有：
 
 1. **专业的推荐码分享网站** - 透明诚信，互惠共赢
-2. **自动化内容更新系统** - 每日新鲜优惠自动推送
-3. **完整的管理工具** - 一键操作，简单易用
-4. **可扩展的架构** - 轻松添加新功能和数据源
+2. **GitHub Pages自动部署** - 免费托管，自动更新
+3. **SEO优化配置** - 搜索引擎友好，提高曝光率
+4. **自动化内容更新系统** - 每日新鲜优惠自动推送（本地运行）
+5. **完整的管理工具** - 一键操作，简单易用
+6. **可扩展的架构** - 轻松添加新功能和数据源
+
+## 🌐 部署选项
+
+### GitHub Pages部署 ⭐推荐
+- **优点**: 免费、稳定、CDN加速、自动HTTPS
+- **限制**: 静态网站，爬虫功能需要本地运行
+- **适用**: 展示网站、推荐码分享
+
+### VPS部署
+- **优点**: 完整功能，爬虫自动运行
+- **成本**: 需要服务器费用
+- **适用**: 全自动化运营
+
+### 混合部署
+- **方案**: GitHub Pages + 定期本地爬虫更新
+- **优点**: 结合两者优势
+- **操作**: 定期本地运行爬虫，推送更新到GitHub
 
 ## 📞 技术支持
 
