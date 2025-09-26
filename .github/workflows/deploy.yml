@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # 每天UTC时间1点、10点、15点运行爬虫（对应北京时间9点、18点、23点）
+    - cron: '0 1,10,15 * * *'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+        
+    - name: Install Python dependencies
+      run: |
+        pip install requests schedule
+        
+    - name: Run demo crawler (safe mode)
+      run: |
+        cd crawler
+        python demo_crawler.py || echo "Crawler failed, using existing content"
+      continue-on-error: true
+        
+    - name: Commit crawler updates (if any)
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Auto-update: Latest deals from crawler $(date)"
+          git push
+        fi
+      continue-on-error: true
+        
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
+        exclude_assets: '.github,crawler/data,crawler/*.log,*_backup_*.html'

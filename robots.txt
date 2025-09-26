@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://your-username.github.io/uk-deals-referral/sitemap.xml
+
+# Disallow crawler data directory
+Disallow: /crawler/data/
+Disallow: /crawler/logs/
+Disallow: /*.log
