@@ -2,7 +2,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://your-username.github.io/uk-deals-referral/sitemap.xml
+Sitemap: https://serenhiworld.github.io/awsome_reward/sitemap.xml
 
 # Disallow crawler data directory
 Disallow: /crawler/data/
