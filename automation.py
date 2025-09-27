@@ -10,6 +10,7 @@ import sys
 import json
 import time
 import logging
+import textwrap
 from datetime import datetime
 from pathlib import Path
 
@@ -21,6 +22,8 @@ try:
 except ImportError:
     # 如果路径有问题，尝试直接导入
     from enhanced_crawler import EnhancedFreeStuffCrawler
+
+from bs4 import BeautifulSoup
 
 class AutomationManager:
     """自动化管理器"""
@@ -83,10 +86,10 @@ class AutomationManager:
             self.logger.info("🌐 更新网站内容...")
             
             # 生成新的HTML内容
-            html_content = self.generate_deals_html(deals_data)
-            
+            deals_content = self.generate_deals_html(deals_data)
+
             # 更新index.html中的优惠部分
-            self.update_index_html(html_content)
+            self.update_index_html(deals_content)
             
             self.logger.info("✅ 网站内容更新成功")
             return True
@@ -113,108 +116,134 @@ class AutomationManager:
             return None
     
     def generate_deals_html(self, deals):
-        """生成优惠HTML内容"""
+        """生成优惠HTML内容，并返回更新所需的组件"""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
-        html = f'''            <div class="daily-deals-section">
-                <h2>🎁 今日英国优惠精选 - 真实商家链接</h2>
-                <p class="update-time">🕒 最新更新: {timestamp} | ✅ 已提取真实优惠链接</p>
-                <div class="deals-container">
-'''
+        header_text = "🎁 今日英国优惠精选 - 真实商家链接"
+        update_text = f"🕒 最新更新: {timestamp} | ✅ 提取真实优惠链接"
 
-        for i, deal in enumerate(deals[:20]):  # 最多显示20个优惠
-            title = deal.get('title_zh', deal.get('title', ''))
-            description = deal.get('description_zh', deal.get('description', ''))
+        deal_items = []
+        for deal in deals[:20]:  # 最多显示20个优惠
+            title = deal.get('title_zh', deal.get('title', '')).strip()
+            description = deal.get('description_zh', deal.get('description', '')).strip()
             if len(description) > 150:
-                description = description[:150] + "..."
-            
+                description = description[:150].rstrip() + "..."
+
             url = deal.get('url', '#')
             source_url = deal.get('source_url', deal.get('detail_url', '#'))
             date = deal.get('date', '')
             image = deal.get('image', '')
-            
-            # 判断是否为真实外部链接
-            is_real_link = 'latestfreestuff.co.uk' not in url
-            
-            # 获取域名
+
+            is_real_link = bool(url and 'latestfreestuff.co.uk' not in url)
+
             try:
                 from urllib.parse import urlparse
                 domain = urlparse(url).netloc if url.startswith('http') else '未知域名'
-            except:
+            except Exception:
                 domain = '未知域名'
-            
-            # 设置样式类
+
             item_class = "deal-item featured-deal" if is_real_link else "deal-item"
-            
-            html += f'''
-                    <div class="{item_class}">'''
-            
+
+            item_html = f"""
+<div class=\"{item_class}\">"""
+
             if is_real_link:
-                html += '''
-                        <div class="deal-badge">✅ 真实链接</div>'''
-            
+                item_html += """
+    <div class=\"deal-badge\">✅ 真实链接</div>"""
+
             if image:
-                html += f'''
-                        <div class="deal-image">
-                            <img src="{image}" alt="优惠图片" loading="lazy">
-                        </div>'''
-            
-            html += f'''
-                        <h3>{title}</h3>
-                        <p>{description}</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 {date}</span>
-                            <span class="domain">🌐 {domain}</span>'''
-            
+                item_html += f"""
+    <div class=\"deal-image\">
+        <img src=\"{image}\" alt=\"优惠图片\" loading=\"lazy\">
+    </div>"""
+
+            item_html += f"""
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <div class=\"deal-meta\">
+        <span class=\"date\">📅 {date}</span>
+        <span class=\"domain\">🌐 {domain}</span>"""
+
             if is_real_link:
-                html += f'''
-                            <a href="{url}" target="_blank" class="deal-link btn-primary">🎁 立即领取</a>'''
+                item_html += f"""
+        <a href=\"{url}\" target=\"_blank\" class=\"deal-link btn-primary\">🎁 立即领取</a>"""
             else:
-                html += f'''
-                            <a href="{source_url}" target="_blank" class="deal-link">查看详情</a>'''
-            
-            html += '''
-                        </div>
-                    </div>'''
-        
-        html += '''
-                </div>
-            </div>'''
-        
-        return html
-    
-    def update_index_html(self, deals_html):
+                item_html += f"""
+        <a href=\"{source_url}\" target=\"_blank\" class=\"deal-link\">查看详情</a>"""
+
+            item_html += """
+    </div>
+</div>"""
+
+            deal_items.append(textwrap.indent(item_html.strip(), " " * 20))
+
+        if not deal_items:
+            deal_items.append(" " * 20 + "<div class=\"deal-item\">暂无最新优惠，敬请关注！</div>")
+
+        deals_container = "\n".join([
+            " " * 16 + '<div class="deals-container">',
+            "\n".join(deal_items),
+            " " * 16 + '</div>'
+        ])
+
+        return {
+            "header_text": header_text,
+            "update_text": update_text,
+            "container_html": deals_container
+        }
+
+    def update_index_html(self, deals_content):
         """更新index.html中的优惠部分"""
         try:
             index_file = self.project_root / 'index.html'
-            
+
             # 读取现有内容
             with open(index_file, 'r', encoding='utf-8') as f:
                 content = f.read()
-            
-            # 查找并替换优惠部分
-            import re
-            
-            # 查找daily-deals-section的开始和结束
-            pattern = r'<div class="daily-deals-section">.*?</div>\s*</div>\s*</div>\s*</section>'
-            
-            replacement = deals_html + '''
-        </div>
-    </section>'''
-            
-            new_content = re.sub(pattern, replacement, content, flags=re.DOTALL)
-            
-            # 如果没有找到匹配的部分，说明结构可能有变化
-            if new_content == content:
-                self.logger.warning("⚠️ 未找到要替换的优惠部分，可能需要手动检查HTML结构")
+
+            soup = BeautifulSoup(content, 'html.parser')
+
+            deals_section = soup.find('section', {'id': 'deals', 'class': 'daily-deals'})
+            if not deals_section:
+                self.logger.warning("⚠️ 未找到 id 为 deals 的每日优惠区块")
                 return False
-            
-            # 写入新内容
+
+            wrapper = deals_section.find('div', class_='daily-deals-section')
+            if not wrapper:
+                wrapper = soup.new_tag('div', attrs={'class': 'daily-deals-section'})
+                deals_section.append(wrapper)
+
+            header = wrapper.find('h2')
+            if not header:
+                header = soup.new_tag('h2')
+                wrapper.insert(0, header)
+            header.string = deals_content['header_text']
+
+            update_time = wrapper.find('p', class_='update-time')
+            if not update_time:
+                update_time = soup.new_tag('p', attrs={'class': 'update-time'})
+                header.insert_after(update_time)
+            update_time.string = deals_content['update_text']
+
+            new_container_soup = BeautifulSoup(deals_content['container_html'], 'html.parser')
+            new_container = new_container_soup.find('div', class_='deals-container') or new_container_soup
+            if new_container.has_attr('class'):
+                new_container['class'] = [cls for cls in new_container.get('class', []) if cls != 'placeholder']
+
+            # 删除占位符元素
+            for placeholder in wrapper.select('.placeholder, .placeholder-message'):
+                placeholder.decompose()
+
+            existing_container = wrapper.find('div', class_='deals-container')
+            if existing_container:
+                existing_container.replace_with(new_container)
+            else:
+                wrapper.append(new_container)
+
             with open(index_file, 'w', encoding='utf-8') as f:
-                f.write(new_content)
-            
+                f.write(str(soup))
+
             return True
-            
+
         except Exception as e:
             self.logger.error(f"更新index.html失败: {e}")
             return False
