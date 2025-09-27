@@ -15,7 +15,7 @@
 - ✅ 智能HTML解析提取优惠数据
 - ✅ 英译中翻译功能
 - ✅ 自动更新网站内容
-- ✅ 定时任务调度（每天3次）
+- ✅ 轻量化命令行工具 (`manage_crawler.py`)
 - ✅ 完整的日志和错误处理
 
 ### 📊 数据管理
@@ -58,33 +58,31 @@ python -m http.server 8000
 
 ### 2. 运行爬虫系统（本地开发）
 
-#### 方式一：演示模式（推荐首次使用）
 ```bash
+# 运行完整流程
+python manage_crawler.py run
+
+# 仅运行增强版爬虫
+python manage_crawler.py crawl
+
+# 使用最新数据更新网站
+python manage_crawler.py update
+
+# 可选: 直接进入 crawler 目录执行核心脚本
 cd crawler
-python3 demo_crawler.py
+python enhanced_crawler.py
 ```
 
-#### 方式二：真实爬虫
+### 3. 报告与日志
 ```bash
-cd crawler
-python3 simple_crawler.py
-```
+# 生成自定义运行报告
+python manage_crawler.py report --deals 5
 
-#### 方式三：定时调度
-```bash
-cd crawler
-python3 ../manage_crawler.py schedule
-```
+# 查看自动化日志
+tail -f automation.log
 
-### 3. 管理工具
-```bash
-python3 manage_crawler.py
-# 选择对应功能：
-# 1. 立即运行爬虫
-# 2. 启动定时调度器
-# 3. 更新网站内容
-# 4. 安装依赖
-# 5. 查看状态
+# 查看增强版爬虫日志
+tail -f crawler/enhanced_crawler.log
 ```
 
 ## 📁 文件说明
@@ -102,13 +100,12 @@ python3 manage_crawler.py
 - `GITHUB_DEPLOYMENT.md` - GitHub部署指南
 
 ### 爬虫系统
-- `crawler/simple_crawler.py` - 简化版爬虫（推荐）
-- `crawler/demo_crawler.py` - 演示爬虫
-- `manage_crawler.py` - 爬虫管理工具
+- `crawler/enhanced_crawler.py` - 增强版爬虫（核心逻辑）
+- `manage_crawler.py` - 轻量化命令行工具
 - `CRAWLER_GUIDE.md` - 详细使用说明
 
 ### 配置和数据
-- `crawler/config.py` - 爬虫配置
+- `crawler/enhanced_config.py` - 爬虫配置
 - `crawler/data/` - 爬取数据存储目录
 - 各种备份文件
 
@@ -124,7 +121,7 @@ python3 manage_crawler.py
 1. **智能解析** - 自动识别优惠信息结构
 2. **中文翻译** - 英文内容自动翻译成中文
 3. **自动更新** - 爬取内容自动插入网站
-4. **定时运行** - 每天自动更新3次
+4. **易于调度** - 外部定时器可直接调用命令行工具
 5. **错误处理** - 完善的日志和异常处理
 
 ## 📈 下一步优化建议

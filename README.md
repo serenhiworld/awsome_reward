@@ -55,12 +55,11 @@ awsome_reward/
 ├── 🎨 style.css               # 网站样式
 ├── ⚡ script.js               # 网站交互脚本
 ├── 🤖 automation.py           # 全自动化主脚本
-├── 🔧 manage_crawler.py       # 爬虫管理脚本
+├── 🔧 manage_crawler.py       # 轻量化管理脚本
 ├── 📝 update_website.py       # 网站内容更新脚本
 ├── 📊 crawler/                # 爬虫系统目录
 │   ├── enhanced_crawler.py    # 增强版爬虫（主爬虫）
 │   ├── enhanced_config.py     # 爬虫配置文件
-│   ├── config.py              # 基础配置
 │   ├── requirements.txt       # Python依赖
 │   └── data/                  # 爬取数据存储
 ├── 🚀 deploy.sh               # 部署脚本
@@ -94,18 +93,20 @@ python automation.py --no-update       # 只运行爬虫，不更新网站
 python automation.py --force-update    # 强制更新网站（即使没有新数据）
 ```
 
-### 3. 单独运行模块
+### 3. 命令行工具
 
 ```bash
-# 只运行爬虫
-python manage_crawler.py
+# 运行完整流程（默认命令）
+python manage_crawler.py run
 
-# 只更新网站内容
-python update_website.py
+# 仅运行增强版爬虫
+python manage_crawler.py crawl
 
-# 直接运行增强版爬虫
-cd crawler
-python enhanced_crawler.py
+# 使用最新数据更新网站
+python manage_crawler.py update
+
+# 生成运行报告
+python manage_crawler.py report --deals 5
 ```
 
 ### 4. 本地预览网站

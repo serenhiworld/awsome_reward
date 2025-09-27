@@ -137,8 +137,7 @@ jobs:
         
     - name: Run crawler (optional)
       run: |
-        cd crawler
-        python demo_crawler.py
+        python manage_crawler.py crawl
         
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
