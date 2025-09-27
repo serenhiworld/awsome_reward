@@ -148,20 +148,35 @@ class WebsiteUpdater:
         
         # 查找插入位置
         insert_marker = '<section id="benefits" class="benefits">'
-        if insert_marker not in content:
-            print("❌ 未找到插入位置标记")
-            return False
-            
-        # 插入新内容
-        new_content = content.replace(
-            insert_marker,
-            deals_html + '\n\n    ' + insert_marker
-        )
-        
+        replacement = deals_html + '\n\n    ' + insert_marker
+
+        if insert_marker in content:
+            new_content = content.replace(insert_marker, replacement, 1)
+        else:
+            lowered_content = content.lower()
+            fallback_markers = ['</main>', '</body>']
+            insert_index = -1
+            chosen_marker = ''
+
+            for marker in fallback_markers:
+                idx = lowered_content.find(marker)
+                if idx != -1:
+                    insert_index = idx
+                    chosen_marker = marker
+                    break
+
+            if insert_index == -1:
+                print("❌ 未找到插入位置标记或备用标记")
+                return False
+
+            # 在备用标记前插入
+            new_content = content[:insert_index] + deals_html + '\n' + content[insert_index:]
+            print(f"ℹ️ 未找到 benefits 区块，已改为在 {chosen_marker} 前插入优惠内容")
+
         # 写入更新后的内容
         with open(self.main_html_path, 'w', encoding='utf-8') as f:
             f.write(new_content)
-            
+
         return True
 
     def update_from_latest_data(self):
