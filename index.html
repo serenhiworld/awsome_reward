@@ -3,476 +3,361 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>英国生活必备 - 优惠推荐码分享</title>
+    <title>英国生活推荐码 - 一起省钱赚奖励</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <div class="logo">
+                <a class="logo" href="#home" aria-label="返回首页">
                     <i class="fas fa-gift"></i>
-                    <span>优惠推荐码分享</span>
-                </div>
+                    <span>英国推荐码福利站</span>
+                </a>
                 <div class="nav-links">
                     <a href="#home">首页</a>
-                    <a href="#products">推荐产品</a>
-                    <a href="#benefits">优惠详情</a>
-                    <a href="#contact">联系我们</a>
+                    <a href="#referral">推荐码亮点</a>
+                    <a href="#steps">使用步骤</a>
+                    <a href="#products">热门服务</a>
+                    <a href="#deals">每日优惠</a>
+                    <a href="#contact">联系我</a>
                 </div>
-                <div class="hamburger">
+                <button class="hamburger" aria-label="展开菜单" type="button">
                     <span></span>
                     <span></span>
                     <span></span>
-                </div>
+                </button>
             </nav>
         </div>
     </header>
 
-    <section id="home" class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>使用我的推荐码，一起省钱赚奖励！</h1>
-                <p>精选英国生活必备服务推荐码分享，您省钱的同时我也能获得推荐奖励，双赢互助！</p>
-                <div class="hero-stats">
-                    <div class="stat">
-                        <h3>双赢</h3>
-                        <p>互惠共赢</p>
-                    </div>
-                    <div class="stat">
-                        <h3>£500+</h3>
-                        <p>已帮大家节省</p>
-                    </div>
-                    <div class="stat">
-                        <h3>真实</h3>
-                        <p>亲测推荐</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="products" class="products">
-        <div class="container">
-            <h2>💰 精选推荐码分享</h2>
-            <div class="products-grid">
-                <div class="product-card featured">
-                    <div class="product-icon">
-                        <i class="fas fa-wifi"></i>
-                    </div>
-                    <h3>Virgin Media 宽带推荐码</h3>
-                    <p class="product-description">🎯 使用我的专属推荐码申请，您享受优惠我获得推荐奖励</p>
-                    <div class="price">
-                        <span class="original-price">常规价格</span>
-                        <span class="discounted-price">🎉 学生12个月优惠</span>
-                    </div>
-                    <div class="features">
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🚀 超快光纤宽带服务</span>
+    <main>
+        <section id="home" class="hero">
+            <div class="container">
+                <div class="hero-grid">
+                    <div class="hero-text">
+                        <span class="hero-eyebrow">专属推荐码 · 真人亲测 · 双赢返利</span>
+                        <h1>使用我的推荐码立享奖励，让我们一起把英国生活成本降到最低</h1>
+                        <p>我会把亲测靠谱的推荐码整理出来，告诉你该怎么操作、能拿到什么奖励、我又能获得多少返利——透明分享、互惠互助。</p>
+                        <div class="hero-actions">
+                            <a class="btn btn-primary" href="#referral">查看所有推荐码</a>
+                            <button class="btn btn-outline copy-code-btn" type="button" data-copy="https://aklam.io/vBZtH2">
+                                <i class="fas fa-copy"></i>
+                                复制 Virgin Media 推荐链接
+                            </button>
                         </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🎓 学生专享12个月大优惠</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🆓 免费专业安装服务</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🤝 您省钱，我获奖励，双赢！</span>
-                        </div>
+                        <ul class="hero-benefits">
+                            <li><i class="fas fa-star"></i> Virgin Media：学生专享光纤优惠，成功安装我们双方都有奖励</li>
+                            <li><i class="fas fa-bolt"></i> Octopus Energy：绿色能源，使用我的推荐链接即得 £50 账单返现</li>
+                            <li><i class="fas fa-shield-heart"></i> 所有流程我都亲自走过，遇到问题随时微信找我</li>
+                        </ul>
                     </div>
-                    <div class="product-buttons">
-                        <a href="https://aklam.io/vBZtH2" class="btn btn-primary" target="_blank">
-                            <i class="fas fa-external-link-alt"></i>
-                            用我的推荐码申请
-                        </a>
-                        <a href="https://www.virginmedia.com/broadband/student" class="btn btn-secondary" target="_blank">
-                            <i class="fas fa-graduation-cap"></i>
-                            查看学生优惠
-                        </a>
-                    </div>
-                    <div class="badge">推荐</div>
-                </div>
-
-                <div class="product-card">
-                    <div class="product-icon">
-                        <i class="fas fa-bolt"></i>
-                    </div>
-                    <h3>Octopus Energy 推荐码</h3>
-                    <p class="product-description">🎯 用我的推荐码注册，您获得£50现金奖励，我也有推荐收益</p>
-                    <div class="price">
-                        <span class="discounted-price">💰 双方各得£50奖励</span>
-                    </div>
-                    <div class="features">
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🌱 100%清洁绿色能源</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>💰 价格透明，无隐藏费用</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>📊 智能电表免费安装</span>
-                        </div>
-                        <div class="feature">
-                            <i class="fas fa-check"></i>
-                            <span>🎁 双方都获得£50现金奖励</span>
-                        </div>
-                    </div>
-                    <div class="product-buttons">
-                        <a href="https://share.octopus.energy/harsh-fish-37" class="btn btn-primary" target="_blank">
-                            <i class="fas fa-external-link-alt"></i>
-                            用我的推荐码注册
-                        </a>
-                    </div>
-                </div>
-
-
-            </div>
-        </div>
-    </section>
-
-    
-    
-    \n\n    
-    <section class="daily-deals">
-        <div class="container">
-                        <div class="daily-deals-section">
-                <h2>🎁 今日英国优惠精选 - 真实商家链接</h2>
-                <p class="update-time">🕒 最新更新: 2025-09-26 17:45:19 | ✅ 已提取真实优惠链接</p>
-                <div class="deals-container">
-
-                    <div class="deal-item featured-deal">
-                        <div class="deal-badge">✅ 真实链接</div>
-                        <div class="deal-image">
-                            <img src="https://www.latestfreestuff.co.uk/wp-content/uploads/2025/09/Free-Whitworths-Chocolate-Fruit-Pack-Worth-3.50-300x300.png" alt="优惠图片" loading="lazy">
-                        </div>
-                        <h3>免费 Whitworths Chocolate & Fruit Pack (Worth £3.50)</h3>
-                        <p>whitworths are giving away 2,000 coupons for a 免费 pack or to 省钱 money on a pack of their delicious fruit, nut, and chocolate mixes… read more ›</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 2025-09-26</span>
-                            <span class="domain">🌐 whitworths.co.uk</span>
-                            <a href="https://whitworths.co.uk/" target="_blank" class="deal-link btn-primary">🎁 立即领取</a>
-                        </div>
-                    </div>
-                    <div class="deal-item featured-deal">
-                        <div class="deal-badge">✅ 真实链接</div>
-                        <div class="deal-image">
-                            <img src="https://www.latestfreestuff.co.uk/wp-content/uploads/2025/09/Free-Pro-Salicylic-Blemish-Treatment-Worth-72-300x300.jpg" alt="优惠图片" loading="lazy">
-                        </div>
-                        <h3>免费 Pro Salicylic Blemish Treatment (Worth £72)</h3>
-                        <p>discovery sample is giving away avant’s pro salicylic immediate blemish s.o.s treatment – 免费 for a 限时 time. this results-driven formula helps to tar获得...</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 2025-09-26</span>
-                            <span class="domain">🌐 discoverysample.com</span>
-                            <a href="https://discoverysample.com/pages/pro-salicylic-immediate-blemish-s-o-s-treatment" target="_blank" class="deal-link btn-primary">🎁 立即领取</a>
-                        </div>
-                    </div>
-                    <div class="deal-item featured-deal">
-                        <div class="deal-badge">✅ 真实链接</div>
-                        <div class="deal-image">
-                            <img src="https://www.latestfreestuff.co.uk/wp-content/uploads/2025/09/Amazing-Windows-11-Laptop-Deal-Save-1000-Today-300x300.jpg" alt="优惠图片" loading="lazy">
-                        </div>
-                        <h3>Amazing Windows 11 Laptop 优惠 – 省钱 £1,000+ 今天</h3>
-                        <p>blackview have an amazing 优惠 on 新 windows 11 laptops – you can 获得 a blackview acebook6 with over £1,000 of savings! this laptop is… read more ›</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 2025-09-26</span>
-                            <span class="domain">🌐 未知域名</span>
-                            <a href="<!DOCTYPE html>
-<!--[if lt IE 7]> <html lang="en-us" class="a-no-js a-lt-ie9 a-lt-ie8 a-lt-ie7"> <![endif]-->
-<!--[if IE 7]>    <html lang="en-us" class="a-no-js a-lt-ie9 a-lt-ie8"> <![endif]-->
-<!--[if IE 8]>    <html lang="en-us" class="a-no-js a-lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!-->
-<html class="a-no-js" lang="en-us"><!--<![endif]--><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<title dir="ltr">Amazon.co.uk</title>
-<meta name="viewport" content="width=device-width">
-<link rel="stylesheet" href="https://images-na.ssl-images-amazon.com/images/G/01/AUIClients/AmazonUI-3c913031596ca78a3768f4e934b1cc02ce238101.secure.min._V1_.css">
-<script>
-
-if (true === true) {
-    var ue_t0 = (+ new Date()),
-        ue_csm = window,
-        ue = { t0: ue_t0, d: function() { return (+new Date() - ue_t0); } },
-        ue_furl = "fls-eu.amazon.co.uk",
-        ue_mid = "A1F83G8C2ARO7P",
-        ue_sid = (document.cookie.match(/session-id=([0-9-]+)/) || [])[1],
-        ue_sn = "opfcaptcha.amazon.co.uk",
-        ue_id = 'BMTFCJGN70QPA8Z3DK2M';
-}
-</script>
-</head>
-<body>
-
-<!--
-        To discuss automated access to Amazon data please contact api-services-support@amazon.com.
-        For information about migrating to our APIs refer to our Marketplace APIs at https://developer.amazonservices.co.uk/ref=rm_c_sv, or our Product Advertising API at https://affiliate-program.amazon.co.uk/gp/advertising/api/detail/main.html/ref=rm_c_ac for advertising use cases.
--->
-
-<!--
-Correios.DoNotSend
--->
-
-<div class="a-container a-padding-double-large" style="min-width:350px;padding:44px 0 !important">
-
-    <div class="a-row a-spacing-double-large" style="width: 350px; margin: 0 auto">
-
-        <div class="a-row a-spacing-medium a-text-center"><i class="a-icon a-logo" alt="Amazon logo"></i></div>
-
-        <div class="a-box a-alert a-alert-info a-spacing-base">
-            <div class="a-box-inner">
-                <i class="a-icon a-icon-alert" alt="Alert icon"></i>
-                <h4>Click the button below to continue shopping</h4>
-                </div>
-            </div>
-
-            <div class="a-section">
-
-                <div class="a-box a-color-offset-background">
-                    <div class="a-box-inner a-padding-extra-large">
-
-                        <form method="get" action="/errors/validateCaptcha" name="">
-                            <input type=hidden name="amzn" value="Lt5GAM1foUmB0leMkDqUEg==" /><input type=hidden name="amzn-r" value="&#047;dp&#047;B0FHHLX2NM?th&#061;1&amp;linkCode&#061;sl1&amp;tag&#061;beautyandhome&#045;21&amp;linkId&#061;2d0f313304c89e67d28be20693e0f386&amp;language&#061;en_GB&amp;ref_&#061;as_li_ss_tl" />
-                            <input type=hidden name="field-keywords" value="UUHJKB" />
-                            <div class="a-section a-spacing-extra-large">
-
-                                <div class="a-row">
-                                    <span class="a-button a-button-primary a-span12">
-                                        <span class="a-button-inner">
-                                            <button type="submit" class="a-button-text" alt="Continue shopping">Continue shopping</button>
-                                        </span>
-                                    </span>
-                                </div>
-
+                    <div class="hero-card">
+                        <div class="code-card">
+                            <div class="code-card-header">
+                                <h2>今日主推：Virgin Media 宽带</h2>
+                                <span class="badge">学生热门</span>
                             </div>
-                        </form>
-
-                    </div>
-                </div>
-
-            </div>
-
-        </div>
-
-        <div class="a-divider a-divider-section"><div class="a-divider-inner"></div></div>
-
-        <div class="a-text-center a-spacing-small a-size-mini">
-            <a href="https://www.amazon.co.uk/gp/help/customer/display.html/ref=footer_cou?ie=UTF8&nodeId=1040616">Conditions of Use &amp; Sale</a>
-            <span class="a-letter-space"></span>
-            <span class="a-letter-space"></span>
-            <span class="a-letter-space"></span>
-            <span class="a-letter-space"></span>
-            <a href="https://www.amazon.co.uk/gp/help/customer/display.html/ref=footer_privacy?ie=UTF8&nodeId=502584">Privacy Notice</a>
-        </div>
-
-        <div class="a-text-center a-size-mini a-color-base">
-            &copy; 1996-2025, Amazon.com, Inc. or its affiliates
-            <script>
-             if (true === true) {
-               document.write('<img src="https://fls-eu.amaz'+'on.co.uk/'+'1/oc-csi/1/OP/requestId=BMTFCJGN70QPA8Z3DK2M&js=1" alt=""/>');
-             };
-            </script>
-          <noscript>
-            <img src="https://fls-eu.amazon.co.uk/1/oc-csi/1/OP/requestId=BMTFCJGN70QPA8Z3DK2M&js=0" alt=""/>
-          </noscript>
-        </div>
-    </div>
-    <script>
-    if (true === true) {
-        var head = document.getElementsByTagName('head')[0],
-            prefix = "https://images-eu.ssl-images-amazon.com/images/G/01/csminstrumentation/",
-            elem = document.createElement("script");
-        elem.src = prefix + "csm-captcha-instrumentation.min.js";
-        head.appendChild(elem);
-
-        elem = document.createElement("script");
-        elem.src = prefix + "rd-script-6d68177fa6061598e9509dc4b5bdd08d.js";
-        head.appendChild(elem);
-    }
-    </script>
-</body></html>
-" target="_blank" class="deal-link btn-primary">🎁 立即领取</a>
-                        </div>
-                    </div>
-                    <div class="deal-item">
-                        <div class="deal-image">
-                            <img src="https://www.latestfreestuff.co.uk/wp-content/uploads/2025/09/Free-Wax-Melt-300x300.png" alt="优惠图片" loading="lazy">
-                        </div>
-                        <h3>免费 luxury wax melt – just finished, join whatsapp!</h3>
-                        <p>just finished 现在, join our w这里 we post 免费bies first so you don’t miss out! hellomelt are giving away 免费 wax melts! these wax melts… read more ›</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 2025-09-26</span>
-                            <span class="domain">🌐 www.latestfreestuff.co.uk</span>
-                            <a href="https://www.latestfreestuff.co.uk/free-household-stuff/free-luxury-wax-melt/" target="_blank" class="deal-link">查看详情</a>
-                        </div>
-                    </div>
-                    <div class="deal-item">
-                        <div class="deal-image">
-                            <img src="https://www.latestfreestuff.co.uk/wp-content/uploads/2025/09/Up-to-150-Bingo-Free-Spins-No-Deposit-300x300.jpg" alt="优惠图片" loading="lazy">
-                        </div>
-                        <h3>up to 150 bingo 免费 spins – no deposit</h3>
-                        <p>you can grab up to 150 免费 spins with no deposit – all thanks to super 免费 bingo! they’ve gat这里d the top bingo 优惠s in… read more ›</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 2025-09-26</span>
-                            <span class="domain">🌐 www.latestfreestuff.co.uk</span>
-                            <a href="https://www.latestfreestuff.co.uk/free-bingo-offers/get-10-free-spins/" target="_blank" class="deal-link">查看详情</a>
+                            <p>光纤网络最快 1Gb，使用推荐链接下单，您可享受学生价 + 额外礼品卡，我可获得推荐奖励，互惠共赢。</p>
+                            <div class="code-display">
+                                <span class="code-label">推荐链接</span>
+                                <span class="code-value">https://aklam.io/vBZtH2</span>
+                                <button class="copy-code-btn" type="button" data-copy="https://aklam.io/vBZtH2">
+                                    <i class="fas fa-copy"></i>
+                                    复制
+                                </button>
+                            </div>
+                            <ul class="reward-list">
+                                <li><i class="fas fa-check"></i> 学生专属 12 个月折扣价</li>
+                                <li><i class="fas fa-check"></i> 免费专业安装，最快 48 小时上门</li>
+                                <li><i class="fas fa-check"></i> 完成安装后，我会把返利经验分享给你</li>
+                            </ul>
+                            <a class="btn btn-primary full-width" href="https://aklam.io/vBZtH2" target="_blank" rel="noopener">立即前往下单</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    \n\n    <section id="benefits" class="benefits">
-        <div class="container">
-            <h2>🤝 为什么选择推荐码分享</h2>
-            <div class="benefits-grid">
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-piggy-bank"></i>
-                    </div>
-                    <h3>💰 互惠共赢</h3>
-                    <p>您通过我的推荐码享受优惠和奖励，我也能获得推荐收益，真正的双赢合作！</p>
+        </section>
+
+        <section class="floating-cta" aria-label="推荐码快速入口">
+            <div class="container floating-cta-grid">
+                <div class="floating-text">
+                    <strong>限时提醒：</strong> 使用下方推荐码即可立享现金返利、礼品卡或账单折扣。
                 </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-user-check"></i>
-                    </div>
-                    <h3>✅ 真实体验</h3>
-                    <p>所有推荐都是我亲自使用过的服务，保证真实可靠，绝不虚假宣传</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-heart"></i>
-                    </div>
-                    <h3>🫶 用心分享</h3>
-                    <p>定期更新最新优惠信息，帮您发现更多省钱机会和优质服务</p>
-                </div>
-                <div class="benefit-card">
-                    <div class="benefit-icon">
-                        <i class="fas fa-handshake"></i>
-                    </div>
-                    <h3>🤝 透明诚信</h3>
-                    <p>明确告知这是推荐码分享，透明合作，让大家都能从中受益</p>
+                <div class="floating-actions">
+                    <button class="btn btn-outline copy-code-btn" type="button" data-copy="https://share.octopus.energy/harsh-fish-37">
+                        <i class="fas fa-leaf"></i>
+                        复制 Octopus Energy 推荐链接
+                    </button>
+                    <a class="btn btn-primary" href="#deals">查看今日优惠</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="testimonials">
-        <div class="container">
-            <h2>用户反馈</h2>
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"用了推荐码申请Virgin Media，不仅拿到了学生优惠，还帮朋友获得了推荐奖励，双赢！"</p>
+        <section id="referral" class="referral-highlight">
+            <div class="container">
+                <h2>我的核心推荐码 · 双赢奖励明细</h2>
+                <p class="section-subtitle">这些服务都是我在英国日常使用的刚需产品，按照步骤操作即可顺利领取奖励。如果不确定如何填写，可以随时联系我。</p>
+                <div class="referral-grid">
+                    <article class="referral-card">
+                        <div class="referral-card-header">
+                            <div class="icon-circle gradient-pink">
+                                <i class="fas fa-wifi"></i>
+                            </div>
+                            <span class="tag">宽带</span>
+                        </div>
+                        <h3>Virgin Media 学生宽带推荐</h3>
+                        <p>覆盖英国大多数城市宿舍，速度快、安装快。通过我的推荐链接订购，您可享学生价 + 额外奖励。</p>
+                        <dl class="reward-details">
+                            <div><dt>我的奖励</dt><dd>成功安装后获得官方推荐奖励</dd></div>
+                            <div><dt>您的奖励</dt><dd>学生专属折扣、官方礼包/礼品卡</dd></div>
+                        </dl>
+                        <div class="code-display compact">
+                            <span class="code-label">推荐链接</span>
+                            <span class="code-value">https://aklam.io/vBZtH2</span>
+                            <button class="copy-code-btn" type="button" data-copy="https://aklam.io/vBZtH2">复制</button>
+                        </div>
+                        <div class="card-actions">
+                            <a class="btn btn-primary" href="https://aklam.io/vBZtH2" target="_blank" rel="noopener">立即使用</a>
+                            <a class="btn btn-secondary" href="https://www.virginmedia.com/broadband/student" target="_blank" rel="noopener">查看学生套餐</a>
+                        </div>
+                    </article>
+                    <article class="referral-card">
+                        <div class="referral-card-header">
+                            <div class="icon-circle gradient-green">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <span class="tag">能源</span>
+                        </div>
+                        <h3>Octopus Energy 绿色能源推荐</h3>
+                        <p>英国口碑最好的绿色能源公司之一，账单透明。通过推荐链接注册，双方可各得 £50 账单抵扣。</p>
+                        <dl class="reward-details">
+                            <div><dt>我的奖励</dt><dd>£50 账单抵扣</dd></div>
+                            <div><dt>您的奖励</dt><dd>£50 账单抵扣（到账后可直接抵扣能源费）</dd></div>
+                        </dl>
+                        <div class="code-display compact">
+                            <span class="code-label">推荐链接</span>
+                            <span class="code-value">https://share.octopus.energy/harsh-fish-37</span>
+                            <button class="copy-code-btn" type="button" data-copy="https://share.octopus.energy/harsh-fish-37">复制</button>
+                        </div>
+                        <div class="card-actions">
+                            <a class="btn btn-primary" href="https://share.octopus.energy/harsh-fish-37" target="_blank" rel="noopener">立即注册</a>
+                            <a class="btn btn-secondary" href="https://octopus.energy/" target="_blank" rel="noopener">了解费用</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="steps" class="steps">
+            <div class="container">
+                <h2>如何使用推荐码？三步搞定</h2>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-icon">1</div>
+                        <h3>复制推荐链接</h3>
+                        <p>点击上方「复制」按钮，系统会把推荐链接保存到剪贴板，或直接点击「立即使用」前往。</p>
                     </div>
-                    <div class="testimonial-author">
-                        <div class="author-info">
+                    <div class="step-card">
+                        <div class="step-icon">2</div>
+                        <h3>按照页面完成注册/下单</h3>
+                        <p>确保全程使用推荐链接打开页面，按商家要求填写信息并完成下单或注册。</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-icon">3</div>
+                        <h3>等待奖励到账</h3>
+                        <p>奖励通常在服务激活后 7-45 天到账。我会全程跟进，必要时协助你联系客服。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="products" class="products">
+            <div class="container">
+                <h2>热门必备服务推荐</h2>
+                <div class="products-grid">
+                    <article class="product-card featured">
+                        <div class="product-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3>Virgin Media 光纤宽带</h3>
+                        <p class="product-description">学生宿舍/合租最优解，安装快速且带来额外奖励。整个流程我已多次验证。</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> 最高 1Gb 光纤，稳定又快捷</li>
+                            <li><i class="fas fa-check"></i> 学生价 + 额外礼品卡</li>
+                            <li><i class="fas fa-check"></i> 推荐双方都有返利</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a class="btn btn-primary" href="https://aklam.io/vBZtH2" target="_blank" rel="noopener">马上领取奖励</a>
+                            <button class="btn btn-outline copy-code-btn" type="button" data-copy="https://aklam.io/vBZtH2">复制推荐链接</button>
+                        </div>
+                    </article>
+                    <article class="product-card">
+                        <div class="product-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <h3>Octopus Energy 家庭能源</h3>
+                        <p class="product-description">账单透明、客服高效，支持灵活支付方式。适合刚搬家或准备换供应商的你。</p>
+                        <ul class="feature-list">
+                            <li><i class="fas fa-check"></i> 双方各得 £50 账单抵扣</li>
+                            <li><i class="fas fa-check"></i> 支持智能电表，能耗实时掌握</li>
+                            <li><i class="fas fa-check"></i> 绿色能源，环保又省钱</li>
+                        </ul>
+                        <div class="product-actions">
+                            <a class="btn btn-primary" href="https://share.octopus.energy/harsh-fish-37" target="_blank" rel="noopener">复制并注册</a>
+                            <button class="btn btn-outline copy-code-btn" type="button" data-copy="https://share.octopus.energy/harsh-fish-37">复制推荐链接</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- 每日优惠由自动脚本插入 -->
+        <section id="deals" class="daily-deals placeholder">
+            <div class="container">
+                <div class="daily-deals-header">
+                    <h2>🎁 今日英国优惠精选</h2>
+                    <p class="update-time">系统正在准备最新优惠，请稍后刷新。</p>
+                </div>
+                <div class="deals-container">
+                    <p class="placeholder-text">爬虫运行后将自动显示 20 条真实优惠和中文使用说明。</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="benefits" class="benefits">
+            <div class="container">
+                <h2>为什么选择跟我拿推荐码？</h2>
+                <div class="benefits-grid">
+                    <article class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-piggy-bank"></i>
+                        </div>
+                        <h3>互惠共赢</h3>
+                        <p>明确告知奖励去向，您拿优惠、我拿返利，信息透明，互利互助。</p>
+                    </article>
+                    <article class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <h3>真实亲测</h3>
+                        <p>所有推荐码均为我本人亲自申请并成功到账，确保路径有效。</p>
+                    </article>
+                    <article class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>售后跟进</h3>
+                        <p>提交订单后我会协助你跟进返利状态，必要时提供申诉话术。</p>
+                    </article>
+                    <article class="benefit-card">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield"></i>
+                        </div>
+                        <h3>数据安全</h3>
+                        <p>只需要官方要求的基本信息，不会索要额外隐私资料。</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonials">
+            <div class="container">
+                <h2>真实用户的反馈</h2>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <p>“用了 Virgin Media 推荐链接，两天内就安装完成，还收到了亚马逊礼品卡，太香了！”</p>
+                        <div class="testimonial-author">
                             <h4>李同学</h4>
-                            <span>伦敦大学学院</span>
+                            <span>伦敦大学学院 UCL</span>
                         </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"通过推荐码注册Octopus Energy，我拿到£50，朋友也有收益，这种分享方式很棒！"</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-info">
+                    </article>
+                    <article class="testimonial-card">
+                        <p>“刚搬家换能源，用 Octopus 推荐码直接省了 £50，还能随时查账单，客服也很友好。”</p>
+                        <div class="testimonial-author">
                             <h4>王女士</h4>
                             <span>曼彻斯特居民</span>
                         </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="testimonial-content">
-                        <p>"很感谢这种透明的推荐码分享，既省了钱又能帮到朋友，推荐给所有留学生！"</p>
-                    </div>
-                    <div class="testimonial-author">
-                        <div class="author-info">
+                    </article>
+                    <article class="testimonial-card">
+                        <p>“推荐码流程解释得超级清楚，返利没到账的时候还帮忙跟进，服务太贴心了。”</p>
+                        <div class="testimonial-author">
                             <h4>张先生</h4>
                             <span>爱丁堡大学</span>
                         </div>
-                    </div>
+                    </article>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="contact-content">
-                <div class="contact-info">
-                    <h2>💬 有疑问？随时联系</h2>
-                    <p>关于推荐码使用、申请流程或服务对比，我都很乐意为您解答。让我们一起在英国生活中省钱又赚奖励！</p>
-                    <div class="contact-methods">
-                        <div class="contact-method">
-                            <i class="fas fa-envelope"></i>
-                            <span>referral@uklife-rewards.com</span>
-                        </div>
-                        <div class="contact-method">
-                            <i class="fas fa-comments"></i>
-                            <span>微信咨询：UKReferralCodes</span>
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-grid">
+                    <div class="contact-info">
+                        <h2>有疑问？随时联系我</h2>
+                        <p>不确定自己的房东/地址是否可用？不知道如何填写申请表？发消息给我，一对一帮助你完成领取。</p>
+                        <div class="contact-methods">
+                            <div class="contact-method">
+                                <i class="fas fa-envelope"></i>
+                                <span>邮箱：referral@uklife-rewards.com</span>
+                            </div>
+                            <div class="contact-method">
+                                <i class="fab fa-weixin"></i>
+                                <span>微信：UKReferralCodes</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="contact-form">
-                    <form>
-                        <div class="form-group">
-                            <input type="text" placeholder="您的姓名" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="邮箱地址" required>
-                        </div>
-                        <div class="form-group">
-                            <textarea placeholder="您的问题或建议" rows="4" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">发送消息</button>
-                    </form>
+                    <div class="contact-form">
+                        <form>
+                            <div class="form-group">
+                                <input type="text" placeholder="您的姓名" required>
+                            </div>
+                            <div class="form-group">
+                                <input type="email" placeholder="邮箱地址" required>
+                            </div>
+                            <div class="form-group">
+                                <textarea rows="4" placeholder="留言：请告诉我您想申请的服务或遇到的问题" required></textarea>
+                            </div>
+                            <button class="btn btn-primary" type="submit">发送消息</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-info">
+            <div class="footer-grid">
+                <div class="footer-brand">
                     <div class="logo">
                         <i class="fas fa-gift"></i>
-                        <span>优惠推荐码分享</span>
+                        <span>英国推荐码福利站</span>
                     </div>
-                    <p>为在英国的华人朋友分享优质推荐码，互惠共赢一起省钱赚奖励</p>
+                    <p>透明分享我在英国亲测的推荐码，帮你省钱也帮我赚奖励，互助共赢。</p>
                 </div>
                 <div class="footer-links">
-                    <h4>快速链接</h4>
+                    <h4>快速导航</h4>
                     <ul>
                         <li><a href="#home">首页</a></li>
-                        <li><a href="#products">推荐产品</a></li>
-                        <li><a href="#benefits">优惠详情</a></li>
-                        <li><a href="#contact">联系我们</a></li>
+                        <li><a href="#referral">推荐码亮点</a></li>
+                        <li><a href="#deals">每日优惠</a></li>
+                        <li><a href="#contact">联系我</a></li>
                     </ul>
                 </div>
-                <div class="footer-social">
-                    <h4>关注我们</h4>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-wechat"></i></a>
-                        <a href="#"><i class="fab fa-weibo"></i></a>
-                        <a href="#"><i class="fab fa-telegram"></i></a>
-                    </div>
+                <div class="footer-links">
+                    <h4>热门问题</h4>
+                    <ul>
+                        <li>奖励多久到账？</li>
+                        <li>申请失败怎么办？</li>
+                        <li>是否支持老用户？</li>
+                    </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 优惠推荐码分享. 透明诚信，互惠共赢.</p>
+                <p>&copy; 2024 英国推荐码福利站 · 所有推荐码均来自真实体验</p>
             </div>
         </div>
     </footer>

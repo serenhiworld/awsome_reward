@@ -3,7 +3,7 @@
 
 # 基础配置
 BASE_URL = "https://www.latestfreestuff.co.uk"
-MAX_DEALS = 10  # 最大获取的优惠数量
+MAX_DEALS = 20  # 最大获取的优惠数量
 REQUEST_DELAY = 2  # 请求间隔（秒）
 REQUEST_TIMEOUT = 30  # 请求超时（秒）
 

@@ -14,8 +14,9 @@ try:
 except ImportError:
     # 如果没有enhanced_config，使用默认配置
     BASE_URL = "https://www.latestfreestuff.co.uk"
-    MAX_DEALS = 10
+    MAX_DEALS = 20
     REQUEST_DELAY = 2
+    REQUEST_TIMEOUT = 30
     ENABLE_TRANSLATION = True
 
 class SimpleTranslator:
@@ -159,19 +160,34 @@ class EnhancedFreeStuffCrawler:
     """增强版优惠爬虫 - 获取真实优惠链接"""
     
     def __init__(self):
-        self.base_url = "https://www.latestfreestuff.co.uk"
+        self.base_url = BASE_URL
         self.translator = SimpleTranslator()
         self.session = requests.Session()
         self.setup_logging()
-        
+
+        self.max_deals = MAX_DEALS if isinstance(MAX_DEALS, int) and MAX_DEALS > 0 else 20
+        self.request_delay = REQUEST_DELAY if isinstance(REQUEST_DELAY, (int, float)) else 2
+        self.request_timeout = REQUEST_TIMEOUT if isinstance(REQUEST_TIMEOUT, (int, float)) else 30
+        self.enable_translation = bool(ENABLE_TRANSLATION)
+
+        self.base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_dir = os.path.join(self.base_dir, 'data')
+        os.makedirs(self.data_dir, exist_ok=True)
+
         # 设置请求头
-        self.headers = {
+        default_headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
             'Accept-Encoding': 'gzip, deflate',
             'Connection': 'keep-alive',
         }
+
+        # 如果配置文件提供自定义请求头则覆盖
+        custom_headers = globals().get('HEADERS', {})
+        default_headers.update(custom_headers if isinstance(custom_headers, dict) else {})
+        self.headers = default_headers
+
         self.session.headers.update(self.headers)
         
     def setup_logging(self):
@@ -190,25 +206,75 @@ class EnhancedFreeStuffCrawler:
         """获取页面内容"""
         try:
             self.logger.info(f"正在获取页面: {url}")
-            response = self.session.get(url, timeout=30)
+            response = self.session.get(url, timeout=self.request_timeout)
             response.raise_for_status()
             return response.text
         except Exception as e:
             self.logger.error(f"获取页面失败 {url}: {e}")
             return None
 
+    def ensure_absolute_url(self, url):
+        """确保URL为绝对地址"""
+        if not url:
+            return ''
+        if url.startswith(('http://', 'https://')):
+            return url
+        return urljoin(self.base_url, url)
+
+    def get_domain(self, url):
+        """提取域名并进行格式化"""
+        if not url:
+            return ''
+        parsed = urlparse(url)
+        domain = parsed.netloc.lower()
+        if domain.startswith('www.'):
+            domain = domain[4:]
+        return domain
+
+    def verify_deal_link(self, url):
+        """验证优惠链接是否可访问"""
+        if not url:
+            return False
+
+        try:
+            head_resp = self.session.head(url, allow_redirects=True, timeout=self.request_timeout)
+            status_code = head_resp.status_code
+
+            if status_code >= 400:
+                self.logger.info(f"HEAD 请求返回 {status_code}，尝试 GET: {url}")
+                get_resp = self.session.get(url, allow_redirects=True, timeout=self.request_timeout)
+                status_code = get_resp.status_code
+
+            if status_code < 400:
+                return True
+
+            self.logger.warning(f"链接返回状态码 {status_code}，跳过: {url}")
+            return False
+        except Exception as e:
+            self.logger.warning(f"链接验证失败，跳过: {url}，原因: {e}")
+            return False
+
+    def build_usage_instructions(self, url):
+        """生成中文使用方法说明"""
+        domain = self.get_domain(url)
+        if domain:
+            return f"使用方法：点击下方“前往优惠”按钮跳转到 {domain} 官方页面，按照页面提示完成注册或下单，在需要填写推荐信息时保持页面打开即可领取奖励。"
+        return "使用方法：点击下方“前往优惠”按钮，按照页面提示完成注册或下单即可领取奖励。"
+
+    def _sanitize_text(self, text):
+        if not text:
+            return ''
+        return re.sub(r'\s+', ' ', text).strip()
+
     def extract_real_deal_url(self, detail_url):
         """从详情页提取真实的优惠链接（非中转页）"""
         try:
             # 如果已经是外部链接，直接返回
             if 'latestfreestuff.co.uk' not in detail_url:
-                return detail_url
-                
+                return self.ensure_absolute_url(detail_url)
+
             # 构建完整URL
-            if detail_url.startswith('/'):
-                full_url = self.base_url + detail_url
-            else:
-                full_url = detail_url
+            full_url = self.ensure_absolute_url(detail_url)
                 
             self.logger.info(f"正在获取详情页以提取真实链接: {full_url}")
             
@@ -229,10 +295,10 @@ class EnhancedFreeStuffCrawler:
                 if 'latestfreestuff.co.uk/claim/' in claim_url:
                     real_url = self._extract_from_claim_page(claim_url)
                     if real_url and real_url != claim_url:
-                        return real_url
+                        return self.ensure_absolute_url(real_url)
                 elif 'latestfreestuff.co.uk' not in claim_url:
                     # 如果GET FREEBIE直接指向外部链接，直接返回
-                    return claim_url
+                    return self.ensure_absolute_url(claim_url)
                 
             # 首先查找claim页面链接 - 这通常包含真实的优惠链接
             claim_links = re.findall(r'href=["\']([^"\']*\/claim\/[^"\']*)["\']', detail_content, re.IGNORECASE)
@@ -244,13 +310,10 @@ class EnhancedFreeStuffCrawler:
                         claim_url = claim_link
                     
                     self.logger.info(f"找到申请页面，正在提取真实链接: {claim_url}")
-                    claim_content = self.get_page_content(claim_url)
-                    
-                    if claim_content:
-                        # 从申请页面提取外部链接
-                        real_link = self._extract_from_claim_page(claim_content)
-                        if real_link:
-                            return real_link
+                    claim_url = self.ensure_absolute_url(claim_url)
+                    real_link = self._extract_from_claim_page(claim_url)
+                    if real_link:
+                        return self.ensure_absolute_url(real_link)
                 
             # 首先查找最常见的优惠按钮链接 - 按优先级排序
             primary_patterns = [
@@ -337,11 +400,11 @@ class EnhancedFreeStuffCrawler:
                         return url
                         
             self.logger.warning(f"未找到真实外部链接，使用详情页链接: {full_url}")
-            return full_url
-            
+            return self.ensure_absolute_url(full_url)
+
         except Exception as e:
             self.logger.error(f"提取真实链接失败: {e}")
-            return detail_url
+            return self.ensure_absolute_url(detail_url)
 
     def _extract_from_claim_page(self, claim_url):
         """从申请页面提取真实的优惠链接"""
@@ -351,7 +414,7 @@ class EnhancedFreeStuffCrawler:
             # 获取申请页面内容
             claim_content = self.get_page_content(claim_url)
             if not claim_content:
-                return claim_url
+                return self.ensure_absolute_url(claim_url)
                 
             # 查找申请页面中的外部链接
             # 优先查找明显的商家网站链接
@@ -372,11 +435,11 @@ class EnhancedFreeStuffCrawler:
                         return url
                         
             # 如果没找到外部链接，返回申请页面本身
-            return claim_url
+            return self.ensure_absolute_url(claim_url)
             
         except Exception as e:
             self.logger.error(f"从申请页面提取链接时出错: {e}")
-            return claim_url
+            return self.ensure_absolute_url(claim_url)
     
     def _is_valid_merchant_link(self, url):
         """验证是否是有效的商家链接"""
@@ -503,22 +566,40 @@ class EnhancedFreeStuffCrawler:
         
         # 清理和验证数据，并获取真实链接
         valid_deals = []
-        for i, deal in enumerate(parser.deals[:5]):  # 限制最多5个，避免过多请求
-            if self.is_valid_deal(deal):
-                self.logger.info(f"处理第 {i+1}/{len(parser.deals[:5])} 个优惠...")
-                
-                # 获取真实优惠链接
-                if 'detail_url' in deal:
-                    real_url = self.extract_real_deal_url(deal['detail_url'])
-                    deal['url'] = real_url
-                    deal['source_url'] = deal['detail_url']  # 保存原始详情页链接
-                    
-                deal = self.clean_deal_data(deal)
-                valid_deals.append(deal)
-                
-                # 添加延迟避免频繁请求
-                time.sleep(2)
-                
+        seen_urls = set()
+
+        for deal in parser.deals:
+            if len(valid_deals) >= self.max_deals:
+                break
+
+            if not self.is_valid_deal(deal):
+                continue
+
+            self.logger.info(f"处理优惠《{deal.get('title', '未知标题')}》...")
+
+            # 获取真实优惠链接
+            if 'detail_url' in deal:
+                real_url = self.extract_real_deal_url(deal['detail_url'])
+                deal['url'] = real_url
+                deal['source_url'] = deal['detail_url']  # 保存原始详情页链接
+
+            deal = self.clean_deal_data(deal)
+            url = deal.get('url')
+
+            if not url or url in seen_urls:
+                self.logger.warning(f"优惠链接无效或重复，跳过: {url}")
+                continue
+
+            if not self.verify_deal_link(url):
+                self.logger.warning(f"源网站无法访问，移除该优惠: {url}")
+                continue
+
+            seen_urls.add(url)
+            valid_deals.append(deal)
+
+            if self.request_delay:
+                time.sleep(self.request_delay)
+
         return valid_deals
 
     def is_valid_deal(self, deal):
@@ -541,39 +622,68 @@ class EnhancedFreeStuffCrawler:
         if 'description' in deal:
             deal['description'] = re.sub(r'\s+', ' ', deal['description']).strip()
             deal['description'] = deal['description'][:300]  # 限制长度
-            
+
+        # 规范链接
+        if 'detail_url' in deal:
+            deal['detail_url'] = self.ensure_absolute_url(deal['detail_url'])
+
+        if 'url' in deal:
+            deal['url'] = self.ensure_absolute_url(deal['url'])
+
         # 修复图片URL
         if 'image' in deal and not deal['image'].startswith('http'):
             if deal['image'].startswith('/'):
                 deal['image'] = self.base_url + deal['image']
             else:
                 deal['image'] = self.base_url + '/' + deal['image']
-                
+
         # 添加日期
         deal['date'] = datetime.now().strftime('%Y-%m-%d')
-        
+
+        # 添加商家域名
+        deal['merchant'] = self.get_domain(deal.get('url')) or self.get_domain(deal.get('detail_url')) or '未知商家'
+
         return deal
 
     def translate_deals(self, deals):
         """翻译优惠信息"""
         translated_deals = []
-        
+
         for i, deal in enumerate(deals):
             self.logger.info(f"翻译第 {i+1}/{len(deals)} 个优惠...")
-            
+
             translated_deal = deal.copy()
-            
-            # 翻译标题
-            if 'title' in deal:
-                translated_deal['title_zh'] = self.translator.translate_to_chinese(deal['title'])
-                
-            # 翻译描述
-            if 'description' in deal:
-                translated_deal['description_zh'] = self.translator.translate_to_chinese(deal['description'])
-                
+            original_title = self._sanitize_text(deal.get('title', ''))
+            original_desc = self._sanitize_text(deal.get('description', ''))
+
+            if self.enable_translation:
+                if original_title:
+                    translated_deal['title_zh'] = self.translator.translate_to_chinese(original_title)
+                if original_desc:
+                    summary_text = self.translator.translate_to_chinese(original_desc)
+                else:
+                    summary_text = ''
+            else:
+                translated_deal['title_zh'] = original_title or deal.get('title', '')
+                summary_text = original_desc
+
+            if not translated_deal.get('title_zh'):
+                translated_deal['title_zh'] = original_title or deal.get('title', '')
+
+            summary_text = self._sanitize_text(summary_text)
+            if not summary_text:
+                summary_text = f"{translated_deal.get('title_zh') or original_title} 限时优惠，数量有限，记得尽快领取。"
+
+            if len(summary_text) > 120:
+                summary_text = summary_text[:120] + '…'
+
+            translated_deal['summary_zh'] = summary_text
+            translated_deal['description_zh'] = f"优惠亮点：{summary_text}"
+            translated_deal['usage'] = self.build_usage_instructions(translated_deal.get('url'))
+
             translated_deals.append(translated_deal)
-            time.sleep(0.5)  # 避免过于频繁
-            
+            time.sleep(min(0.3, self.request_delay))  # 避免过于频繁
+
         return translated_deals
 
     def save_deals(self, deals):
@@ -581,67 +691,70 @@ class EnhancedFreeStuffCrawler:
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         
         # 保存JSON
-        os.makedirs('data', exist_ok=True)
-        json_file = f"data/enhanced_deals_{timestamp}.json"
-        
+        json_file = os.path.join(self.data_dir, f"enhanced_deals_{timestamp}.json")
+
         with open(json_file, 'w', encoding='utf-8') as f:
             json.dump(deals, f, ensure_ascii=False, indent=2)
-            
+
         self.logger.info(f"已保存 {len(deals)} 个优惠到 {json_file}")
-        
+
         # 生成HTML
         html_content = self.generate_html(deals)
-        html_file = f"data/enhanced_deals_{timestamp}.html"
-        
+        html_file = os.path.join(self.data_dir, f"enhanced_deals_{timestamp}.html")
+
         with open(html_file, 'w', encoding='utf-8') as f:
             f.write(html_content)
-            
+
         return json_file, html_file
 
     def generate_html(self, deals):
         """生成HTML内容"""
-        html = f"""
-        <section class="daily-deals">
-            <div class="container">
-                <div class="daily-deals-section">
-                    <h2>🎁 今日英国优惠精选（真实链接版）</h2>
-                    <p class="update-time">更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-                    <div class="deals-container">
-        """
-        
+        update_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        html = [
+            "    <section id=\"deals\" class=\"daily-deals\">",
+            "        <div class=\"container\">",
+            "            <div class=\"daily-deals-header\">",
+            f"                <h2>🎁 今日英国优惠精选</h2>",
+            f"                <p class=\"update-time\">🕒 最新更新：{update_time} ｜ 已筛选 {len(deals)} 条真实优惠</p>",
+            "            </div>",
+            "            <div class=\"deals-container\">"
+        ]
+
         for deal in deals:
-            title_zh = deal.get('title_zh', deal.get('title', ''))
-            desc_zh = deal.get('description_zh', deal.get('description', ''))
-            if len(desc_zh) > 100:
-                desc_zh = desc_zh[:100] + "..."
-            
-            # 显示真实链接域名
+            title_zh = deal.get('title_zh') or deal.get('title') or '今日优惠'
+            summary = deal.get('summary_zh') or deal.get('description_zh') or ''
+            usage = deal.get('usage') or self.build_usage_instructions(deal.get('url'))
             url = deal.get('url', '#')
-            domain = urlparse(url).netloc if url.startswith('http') else '未知'
-            
-            html += f"""
-            <div class="deal-item">
-                <h3>{title_zh}</h3>
-                <p>{desc_zh}</p>
-                <div class="deal-meta">
-                    <span class="date">📅 {deal.get('date', '')}</span>
-                    <span class="source">🔗 {domain}</span>
-                    <a href="{url}" target="_blank" class="deal-link">访问优惠</a>
-                </div>
-            </div>
-            """
-            
-        html += """
-                    </div>
-                    <div class="deal-note">
-                        <p>💡 所有链接已解析为真实优惠地址，点击直接前往商家官网</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        """
-        
-        return html
+            merchant = deal.get('merchant', '未知商家')
+            date = deal.get('date', '')
+            image = deal.get('image')
+
+            card_html = ["                <article class=\"deal-card\">"]
+
+            if image:
+                card_html.append(f"                    <img src=\"{image}\" alt=\"{title_zh}\" loading=\"lazy\">")
+
+            card_html.extend([
+                f"                    <h3>{title_zh}</h3>",
+                f"                    <p class=\"deal-summary\">{summary}</p>",
+                f"                    <div class=\"deal-usage\">{usage}</div>",
+                "                    <div class=\"deal-meta\">",
+                f"                        <span>📅 {date}</span>",
+                f"                        <span>🌐 {merchant}</span>",
+                "                    </div>",
+                f"                    <a href=\"{url}\" target=\"_blank\" rel=\"noopener\" class=\"deal-link\">前往优惠</a>",
+                "                </article>"
+            ])
+
+            html.extend(card_html)
+
+        html.extend([
+            "            </div>",
+            "        </div>",
+            "    </section>"
+        ])
+
+        return "\n".join(html)
 
     def run_crawler(self):
         """运行增强版爬虫"""

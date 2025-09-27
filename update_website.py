@@ -8,6 +8,7 @@ import json
 import re
 from datetime import datetime
 import shutil
+import html
 
 class WebsiteUpdater:
     def __init__(self):
@@ -73,41 +74,59 @@ class WebsiteUpdater:
         if not deals:
             return ""
             
-        html = f"""
-    <section class="daily-deals">
-        <div class="container">
-            <div class="daily-deals-section">
-                <h2>🎁 今日英国优惠精选</h2>
-                <p class="update-time">更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-                <div class="deals-container">
-"""
-        
+        update_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        section_lines = [
+            "    <section id=\"deals\" class=\"daily-deals\">",
+            "        <div class=\"container\">",
+            "            <div class=\"daily-deals-header\">",
+            f"                <h2>🎁 今日英国优惠精选</h2>",
+            f"                <p class=\"update-time\">🕒 最新更新：{update_time} ｜ 已筛选 {len(deals)} 条真实优惠</p>",
+            "            </div>",
+            "            <div class=\"deals-container\">"
+        ]
+
         for deal in deals:
-            title_zh = deal.get('title_zh', deal.get('title', ''))
-            desc_zh = deal.get('description_zh', deal.get('description', ''))
-            
-            # 限制描述长度
-            if len(desc_zh) > 100:
-                desc_zh = desc_zh[:100] + "..."
-                
-            html += f"""
-                    <div class="deal-item">
-                        <h3>{title_zh}</h3>
-                        <p>{desc_zh}</p>
-                        <div class="deal-meta">
-                            <span class="date">📅 {deal.get('date', '')}</span>
-                            <a href="{deal.get('url', '#')}" target="_blank" class="deal-link">查看详情</a>
-                        </div>
-                    </div>
-"""
-        
-        html += """
-                </div>
-            </div>
-        </div>
-    </section>
-"""
-        return html
+            title = deal.get('title_zh') or deal.get('title') or '今日优惠'
+            summary = deal.get('summary_zh') or deal.get('description_zh') or deal.get('description') or ''
+            usage = deal.get('usage') or '使用方法：点击下方“前往优惠”，按照页面提示完成操作即可领取奖励。'
+            url = deal.get('url', '#')
+            merchant = deal.get('merchant', '未知商家')
+            date = deal.get('date', '')
+            image = deal.get('image')
+
+            summary = summary[:120] + '…' if len(summary) > 120 else summary
+
+            title_html = html.escape(title)
+            summary_html = html.escape(summary)
+            usage_html = html.escape(usage)
+            merchant_html = html.escape(merchant)
+            date_html = html.escape(date)
+            url_html = html.escape(url)
+
+            section_lines.append("                <article class=\"deal-card\">")
+
+            if image:
+                section_lines.append(f"                    <img src=\"{html.escape(image)}\" alt=\"{title_html}\" loading=\"lazy\">")
+
+            section_lines.extend([
+                f"                    <h3>{title_html}</h3>",
+                f"                    <p class=\"deal-summary\">{summary_html}</p>",
+                f"                    <div class=\"deal-usage\">{usage_html}</div>",
+                "                    <div class=\"deal-meta\">",
+                f"                        <span>📅 {date_html}</span>",
+                f"                        <span>🌐 {merchant_html}</span>",
+                "                    </div>",
+                f"                    <a href=\"{url_html}\" target=\"_blank\" rel=\"noopener\" class=\"deal-link\">前往优惠</a>",
+                "                </article>"
+            ])
+
+        section_lines.extend([
+            "            </div>",
+            "        </div>",
+            "    </section>"
+        ])
+
+        return "\n".join(section_lines)
 
     def update_website(self, deals_html):
         """更新网站内容"""
@@ -121,7 +140,7 @@ class WebsiteUpdater:
             
         # 移除旧的爬虫内容
         content = re.sub(
-            r'<section class="daily-deals">.*?</section>',
+            r'<section[^>]*class="[^"]*daily-deals[^"]*"[^>]*>.*?</section>',
             '',
             content,
             flags=re.DOTALL

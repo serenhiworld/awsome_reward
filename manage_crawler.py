@@ -14,12 +14,12 @@ from datetime import datetime
 import argparse
 
 def run_simple_crawler():
-    """运行简单爬虫"""
+    """运行增强版每日优惠爬虫"""
     try:
-        result = subprocess.run([sys.executable, 'simple_crawler.py'], 
+        result = subprocess.run([sys.executable, 'enhanced_crawler.py'],
                               capture_output=True, text=True, cwd='crawler')
         if result.returncode == 0:
-            print("✅ 爬虫运行成功")
+            print("✅ 增强爬虫运行成功")
             print(result.stdout)
         else:
             print("❌ 爬虫运行失败")
@@ -71,7 +71,7 @@ def update_website():
             # 移除旧的爬虫内容
             import re
             main_content = re.sub(
-                r'<div class="daily-deals-section">.*?</div>\\s*</div>',
+                r'<section[^>]*class="[^"]*daily-deals[^"]*"[^>]*>.*?</section>',
                 '',
                 main_content,
                 flags=re.DOTALL
