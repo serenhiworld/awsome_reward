@@ -66,11 +66,7 @@
 
 #### 🤖 爬虫系统
 - `enhanced_crawler.py` - 增强爬虫 ⭐ 核心文件
-- `simple_crawler.py` - 简化爬虫
-- `demo_crawler.py` - 演示爬虫
-- `crawler.py` - 基础爬虫
-- `scheduler.py` - 任务调度器
-- `config.py` & `enhanced_config.py` - 配置文件
+- `enhanced_config.py` - 配置文件
 
 #### 📊 最新数据
 - `enhanced_deals_20250926_171102.json` - 最新优惠数据 ⭐
