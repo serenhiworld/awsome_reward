@@ -14,20 +14,22 @@ class WebsiteUpdater:
         self.main_html_path = "index.html"
         self.data_dir = "crawler/data"
         self.backup_dir = "backups"
-        
+        self.sample_data_dir = "crawler/sample_data"
+        self.sample_json = os.path.join(self.sample_data_dir, "enhanced_deals_sample.json")
+
     def get_latest_data_files(self):
         """获取最新的数据文件"""
         if not os.path.exists(self.data_dir):
-            print("❌ 数据目录不存在，请先运行爬虫")
-            return None, None
-            
+            print("⚠️ 数据目录不存在，尝试使用示例数据")
+            return self.get_sample_data_files()
+
         # 获取所有JSON和HTML文件
         json_files = [f for f in os.listdir(self.data_dir) if f.endswith('.json')]
         html_files = [f for f in os.listdir(self.data_dir) if f.endswith('.html')]
-        
+
         if not json_files or not html_files:
-            print("❌ 没有找到数据文件，请先运行爬虫")
-            return None, None
+            print("⚠️ 没有找到完整的数据文件，尝试使用示例数据")
+            return self.get_sample_data_files()
             
         # 获取最新文件（按修改时间）
         latest_json = max(json_files, key=lambda f: os.path.getmtime(os.path.join(self.data_dir, f)))
@@ -40,6 +42,15 @@ class WebsiteUpdater:
         print(f"📄 最新HTML文件: {latest_html}")
         
         return json_path, html_path
+
+    def get_sample_data_files(self):
+        """获取示例数据文件"""
+        if os.path.exists(self.sample_json):
+            print("⚠️ 使用示例优惠数据进行更新")
+            return self.sample_json, None
+
+        print("❌ 未找到示例数据文件，请先运行爬虫生成数据")
+        return None, None
 
     def load_deals_data(self, json_path):
         """加载优惠数据"""
@@ -68,17 +79,28 @@ class WebsiteUpdater:
         print(f"💾 网站已备份到: {backup_path}")
         return True
 
-    def generate_deals_html(self, deals):
+    def generate_deals_html(self, deals, used_sample=False):
         """生成优惠信息的HTML"""
         if not deals:
             return ""
-            
+
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        header = "🎁 今日英国优惠精选"
+        if used_sample:
+            header += "（示例数据）"
+
+        update_line = f"🕒 最新更新: {timestamp}"
+        if used_sample:
+            update_line += " | ⚠️ 暂无实时数据，展示示例优惠"
+        else:
+            update_line += " | ✅ 提取真实商家链接"
+
         html = f"""
-    <section class="daily-deals">
+    <section id="deals" class="daily-deals">
         <div class="container">
             <div class="daily-deals-section">
-                <h2>🎁 今日英国优惠精选</h2>
-                <p class="update-time">更新时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
+                <h2>{header}</h2>
+                <p class="update-time">{update_line}</p>
                 <div class="deals-container">
 """
         
@@ -121,23 +143,22 @@ class WebsiteUpdater:
             
         # 移除旧的爬虫内容
         content = re.sub(
-            r'<section class="daily-deals">.*?</section>',
+            r'<section[^>]*class="daily-deals"[^>]*>.*?</section>',
             '',
             content,
             flags=re.DOTALL
         )
-        
+
         # 查找插入位置
-        insert_marker = '<section id="benefits" class="benefits">'
-        if insert_marker not in content:
+        match = re.search(r'<section[^>]*id="benefits"[^>]*>', content)
+        if not match:
             print("❌ 未找到插入位置标记")
             return False
-            
+
+        insert_pos = match.start()
+
         # 插入新内容
-        new_content = content.replace(
-            insert_marker,
-            deals_html + '\n\n    ' + insert_marker
-        )
+        new_content = content[:insert_pos] + deals_html + "\n\n" + content[insert_pos:]
         
         # 写入更新后的内容
         with open(self.main_html_path, 'w', encoding='utf-8') as f:
@@ -153,7 +174,9 @@ class WebsiteUpdater:
         json_path, html_path = self.get_latest_data_files()
         if not json_path:
             return False
-            
+
+        used_sample = json_path == self.sample_json
+
         # 加载数据
         deals = self.load_deals_data(json_path)
         if not deals:
@@ -164,7 +187,7 @@ class WebsiteUpdater:
             return False
             
         # 生成HTML
-        deals_html = self.generate_deals_html(deals)
+        deals_html = self.generate_deals_html(deals, used_sample=used_sample)
         
         # 更新网站
         if self.update_website(deals_html):
