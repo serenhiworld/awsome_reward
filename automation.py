@@ -33,6 +33,9 @@ class AutomationManager:
         self.project_root = Path(__file__).parent
         self.crawler_dir = self.project_root / 'crawler'
         self.data_dir = self.crawler_dir / 'data'
+        self.sample_data_dir = self.crawler_dir / 'sample_data'
+        self.sample_data_file = self.sample_data_dir / 'enhanced_deals_sample.json'
+        self.last_update_used_fallback = False
         
     def setup_logging(self):
         """设置日志"""
@@ -72,21 +75,40 @@ class AutomationManager:
             self.logger.error(f"❌ 爬虫运行失败: {e}")
             return []
     
+    def load_fallback_deals(self):
+        """加载示例优惠数据作为兜底"""
+        if self.sample_data_file.exists():
+            try:
+                with open(self.sample_data_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                if data:
+                    self.logger.warning("⚠️ 未获取到实时优惠，使用示例数据进行展示")
+                    return data
+            except Exception as exc:
+                self.logger.error(f"读取示例优惠数据失败: {exc}")
+        else:
+            self.logger.error("未找到示例优惠数据文件 crawler/sample_data/enhanced_deals_sample.json")
+        return []
+
     def update_website(self, deals_data=None):
         """更新网站内容"""
+        self.last_update_used_fallback = False
         if not deals_data:
             # 获取最新的数据文件
             deals_data = self.get_latest_deals()
-        
+
         if not deals_data:
-            self.logger.warning("⚠️ 没有可用的优惠数据来更新网站")
-            return False
-        
+            deals_data = self.load_fallback_deals()
+            if not deals_data:
+                self.logger.warning("⚠️ 没有可用的优惠数据来更新网站")
+                return False
+            self.last_update_used_fallback = True
+
         try:
             self.logger.info("🌐 更新网站内容...")
-            
+
             # 生成新的HTML内容
-            deals_content = self.generate_deals_html(deals_data)
+            deals_content = self.generate_deals_html(deals_data, used_fallback=self.last_update_used_fallback)
 
             # 更新index.html中的优惠部分
             self.update_index_html(deals_content)
@@ -104,22 +126,29 @@ class AutomationManager:
             # 查找最新的enhanced_deals文件
             json_files = list(self.data_dir.glob('enhanced_deals_*.json'))
             if not json_files:
-                return None
-                
+                return []
+
             latest_file = max(json_files, key=lambda x: x.stat().st_mtime)
-            
+
             with open(latest_file, 'r', encoding='utf-8') as f:
                 return json.load(f)
-                
+
         except Exception as e:
             self.logger.error(f"获取最新数据失败: {e}")
-            return None
+            return []
     
-    def generate_deals_html(self, deals):
+    def generate_deals_html(self, deals, used_fallback=False):
         """生成优惠HTML内容，并返回更新所需的组件"""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         header_text = "🎁 今日英国优惠精选 - 真实商家链接"
-        update_text = f"🕒 最新更新: {timestamp} | ✅ 提取真实优惠链接"
+        if used_fallback:
+            header_text += "（示例数据）"
+
+        update_text = f"🕒 最新更新: {timestamp}"
+        if used_fallback:
+            update_text += " | ⚠️ 暂无实时数据，展示示例优惠"
+        else:
+            update_text += " | ✅ 提取真实优惠链接"
 
         deal_items = []
         for deal in deals[:20]:  # 最多显示20个优惠
@@ -248,19 +277,29 @@ class AutomationManager:
             self.logger.error(f"更新index.html失败: {e}")
             return False
     
-    def generate_report(self, deals_count=0):
+    def generate_report(self, deals_count=0, used_fallback=False):
         """生成运行报告"""
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        
+
+        crawler_status = '✅ 成功' if deals_count > 0 else ('⚠️ 使用示例数据' if used_fallback else '❌ 失败')
+        website_status = '✅ 成功' if deals_count > 0 or used_fallback else '⚠️ 跳过'
+        suggestion = (
+            '⚠️ 需要检查爬虫设置或网站状态'
+            if deals_count == 0 and not used_fallback
+            else '⚠️ 使用示例数据，请检查爬虫状态'
+            if used_fallback
+            else '✅ 系统运行正常，继续定时执行'
+        )
+
         report = f"""# 🤖 自动化运行报告
 
 ## 📅 运行时间: {timestamp}
 
 ### ✅ 运行结果
 
-- **爬虫状态**: {'✅ 成功' if deals_count > 0 else '❌ 失败'}
+- **爬虫状态**: {crawler_status}
 - **获取优惠数量**: {deals_count} 个
-- **网站更新**: {'✅ 成功' if deals_count > 0 else '⚠️ 跳过'}
+- **网站更新**: {website_status}
 - **真实链接提取**: ✅ 已启用
 
 ### 📊 系统状态
@@ -277,7 +316,7 @@ class AutomationManager:
 
 ### 📝 下次运行建议
 
-{'✅ 系统运行正常，继续定时执行' if deals_count > 0 else '⚠️ 需要检查爬虫设置或网站状态'}
+{suggestion}
 
 ---
 🎉 自动化系统运行完成！
@@ -302,13 +341,12 @@ class AutomationManager:
         deals_count = len(deals)
         
         # 2. 更新网站
-        if deals_count > 0:
-            success = self.update_website(deals)
-            if not success:
-                self.logger.error("网站更新失败")
-        
+        update_success = self.update_website(deals)
+        if not update_success:
+            self.logger.error("网站更新失败")
+
         # 3. 生成报告
-        report = self.generate_report(deals_count)
+        report = self.generate_report(deals_count, used_fallback=self.last_update_used_fallback)
         
         end_time = time.time()
         duration = round(end_time - start_time, 2)
@@ -320,11 +358,13 @@ class AutomationManager:
         print(f"🎊 英国优惠推荐码网站 - 自动化完成")
         print(f"{'='*60}")
         print(f"📊 获取优惠: {deals_count} 个")
+        if self.last_update_used_fallback and deals_count == 0:
+            print("⚠️ 本次展示示例优惠数据，请检查爬虫或网络连接")
         print(f"⏱️  运行时间: {duration} 秒")
         print(f"🌐 本地预览: http://localhost:8000")
         print(f"{'='*60}")
         
-        return deals_count > 0
+        return update_success
 
 def main():
     """主函数"""
