@@ -69,7 +69,8 @@ ehthumbs.db
 Thumbs.db
 
 # Crawler data and logs
-crawler/data/
+crawler/data/*.html
+crawler/data/*.log
 crawler/logs/
 crawler/*.log
 *.log
