@@ -136,6 +136,11 @@ class WebsiteUpdater:
 
         used_sample = json_path == self.sample_json
 
+        source_text = os.path.relpath(json_path)
+        print(f"📦 使用数据源: {source_text}")
+        if html_path:
+            print(f"🧩 对应HTML片段: {os.path.relpath(html_path)}")
+
         # 加载数据
         deals = self.load_deals_data(json_path)
         if not deals:

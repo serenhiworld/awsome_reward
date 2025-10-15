@@ -12,6 +12,7 @@ import time
 import logging
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 # 添加crawler目录到系统路径
 sys.path.append(os.path.join(os.path.dirname(__file__), 'crawler'))
@@ -40,6 +41,8 @@ class AutomationManager:
         self.display_deal_count = 0
         self.last_total_real_deals = 0
         self.required_real_deals = REQUIRED_REAL_DEALS
+        self.latest_json_path: Optional[Path] = None
+        self.latest_html_path: Optional[Path] = None
         
     def setup_logging(self):
         """设置日志"""
@@ -56,7 +59,7 @@ class AutomationManager:
     def run_crawler(self):
         """运行爬虫"""
         self.logger.info("🤖 启动爬虫系统...")
-        
+
         try:
             # 切换到crawler目录
             original_cwd = os.getcwd()
@@ -70,15 +73,45 @@ class AutomationManager:
             
             if deals:
                 self.logger.info(f"✅ 爬虫成功获取 {len(deals)} 个优惠")
+                self.persist_deals(deals)
                 return deals
             else:
                 self.logger.warning("⚠️ 爬虫未获取到优惠数据")
                 return []
-                
+
         except Exception as e:
             self.logger.error(f"❌ 爬虫运行失败: {e}")
             return []
-    
+
+    def persist_deals(self, deals):
+        """保存最新爬取的优惠数据供后续使用"""
+        if not deals:
+            return
+
+        try:
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            self.data_dir.mkdir(parents=True, exist_ok=True)
+
+            json_path = self.data_dir / f'enhanced_deals_{timestamp}.json'
+            with open(json_path, 'w', encoding='utf-8') as f:
+                json.dump(deals, f, ensure_ascii=False, indent=2)
+
+            self.latest_json_path = json_path
+            self.logger.info("💾 已保存最新优惠数据: %s", json_path.name)
+
+            display_deals, _, _ = select_real_deals(
+                deals, required_count=self.required_real_deals
+            )
+            if display_deals:
+                html_section, _ = render_deals_section(display_deals)
+                html_path = self.data_dir / f'enhanced_deals_{timestamp}.html'
+                with open(html_path, 'w', encoding='utf-8') as f:
+                    f.write(html_section)
+                self.latest_html_path = html_path
+                self.logger.info("📝 已生成每日优惠 HTML 片段: %s", html_path.name)
+        except Exception as error:
+            self.logger.error("❌ 保存优惠数据失败: %s", error)
+
     def update_website(self, deals_data=None):
         """更新网站内容，仅展示真实优惠链接"""
         self.display_deal_count = 0
@@ -173,6 +206,9 @@ class AutomationManager:
         else:
             suggestion = '✅ 系统运行正常，继续保持每日更新'
 
+        latest_json = self.latest_json_path.name if self.latest_json_path else '无'
+        latest_html = self.latest_html_path.name if self.latest_html_path else '无'
+
         report = f"""# 🤖 自动化运行报告
 
 ## 📅 运行时间: {timestamp}
@@ -184,6 +220,8 @@ class AutomationManager:
 - **展示优惠数量**: {deals_count} 条
 - **网站更新**: {website_status}
 - **真实链接提取**: ✅ 已启用
+- **最新数据文件**: {latest_json}
+- **最新HTML片段**: {latest_html}
 
 ### 📊 系统状态
 

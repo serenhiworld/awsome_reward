@@ -1,0 +1,56 @@
+[
+  {
+    "title": "Pret Club 试用：首月仅 £5",
+    "title_zh": "Pret Club 订阅首月仅 £5",
+    "description": "Join Pret Club for endless coffee for £5 in the first month.",
+    "description_zh": "加入 Pret Club 订阅，首月仅需 £5 即可每日享受最多五杯饮品。",
+    "url": "https://www.pret.co.uk/en-GB/pret-club",
+    "date": "2025-10-15",
+    "image": "https://images.pret.co.uk/image/upload/f_auto,q_auto/pret-club-coffee.jpg"
+  },
+  {
+    "title": "Nando's Rewards 免费鸡翅",
+    "title_zh": "Nando's Rewards：首次兑换免费鸡翅",
+    "description": "Earn your first reward faster with the new Nando's Rewards app.",
+    "description_zh": "注册 Nando's Rewards 并完成首次消费即可解锁免费 PERi-PERi 鸡翅兑换。",
+    "url": "https://www.nandos.co.uk/rewards",
+    "date": "2025-10-15",
+    "image": "https://www.nandos.co.uk/sites/default/files/styles/promotion/public/2023-01/nandos-wings.jpg"
+  },
+  {
+    "title": "Tesco Clubcard：烘培区买一赠一",
+    "title_zh": "Tesco Clubcard 烘焙产品买一赠一",
+    "description": "Clubcard price on selected in-store bakery treats, buy one get one free.",
+    "description_zh": "使用 Tesco Clubcard 在门店购买指定烘焙点心享受买一赠一优惠。",
+    "url": "https://www.tesco.com/groceries/en-GB/zone/clubcard-prices",
+    "date": "2025-10-15",
+    "image": "https://digitalcontent.api.tesco.com/v2/media/ghs/9a7baca8-pretzel.jpg"
+  },
+  {
+    "title": "Paperchase Treat Me 会员生日礼",
+    "title_zh": "Paperchase Treat Me：生日免费礼物",
+    "description": "Treat Me members get a £5 voucher to spend during their birthday month.",
+    "description_zh": "加入 Paperchase Treat Me 会员，生日月即可获得 £5 礼品卡用于门店消费。",
+    "url": "https://www.paperchase.com/en-gb/treat-me",
+    "date": "2025-10-15",
+    "image": "https://images.paperchase.com/is/image/paperchase/treat-me-card.jpg"
+  },
+  {
+    "title": "Yo! Sushi Blue Light Card 优惠",
+    "title_zh": "Yo! Sushi Blue Light Card 会员 20% 折扣",
+    "description": "Blue Light Card holders save 20% off the bill Monday to Thursday.",
+    "description_zh": "出示 Blue Light Card 在 Yo! Sushi 周一至周四可享受整单 8 折优惠。",
+    "url": "https://yosushi.com/offers/blue-light-card",
+    "date": "2025-10-15",
+    "image": "https://yosushi.com/cms_images/blue-light-card-offer.jpg"
+  },
+  {
+    "title": "Vue Cinemas 学生票 £5.99",
+    "title_zh": "Vue 影院学生票 £5.99",
+    "description": "Vue student tickets from £5.99 with valid student ID, available nationwide.",
+    "description_zh": "出示学生证在 Vue Cinemas 购票，精选场次学生票仅 £5.99 起。",
+    "url": "https://www.myvue.com/offers/standalone/student-discount",
+    "date": "2025-10-15",
+    "image": "https://www.myvue.com/-/media/vuecinemas/offers/student-ticket.jpg"
+  }
+]
